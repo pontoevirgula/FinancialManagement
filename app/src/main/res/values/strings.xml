@@ -1,0 +1,17 @@
+<resources>
+    <string name="app">Controle De Gastos</string>
+
+
+    <string name="lista_transacoes_adiciona" />
+    <string name="add_profit">Adiciona receita</string>
+    <string name="add_expense">Adiciona despesa</string>
+    <string name="value">Valor</string>
+    <string name="date">Data</string>
+    <string name="category">Categoria</string>
+    <string name="profit">Receita</string>
+    <string name="expense">Despesa</string>
+    <string name="total">Total</string>
+    <string name="month">Mês</string>
+    <string name="year">Ano</string>
+    <string name="inicial_value">R$ 0,00</string>
+</resources>
