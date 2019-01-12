@@ -22,6 +22,7 @@ class SummaryView(val view : View) {
 //                view.resumo_card_despesa.text = totalDespesa.formatToBrazilianCurrency()
 //            }
 //        }
+
         var totalReceita : Double = transacoes
             .filter { transaction -> transaction.type == Type.PROFIT }
             .sumByDouble { transaction -> transaction.value.toDouble()  }
