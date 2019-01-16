@@ -2,16 +2,17 @@
 <resources>
     <string-array name="categorias_de_receita">
         <item>Receita indefinida</item>
-        <item>Economias</item>
+        <item>Renda extra</item>
         <item>Empréstimo</item>
         <item>Pagamento</item>
-        <item>Presente</item>
+        <item>Doações</item>
         <item>Salário</item>
         <item>Vendas</item>
     </string-array>
+
     <string-array name="categorias_de_despesa">
         <item>Despesa indefinida</item>
-        <item>Casa</item>
+        <item>Aluguel</item>
         <item>Comida</item>
         <item>Comunicações</item>
         <item>Contas</item>
@@ -21,6 +22,7 @@
         <item>Supermercado</item>
         <item>Transporte</item>
     </string-array>
+
     <string-array name="meses">
         <item>Janeiro</item>
         <item>Fevereiro</item>

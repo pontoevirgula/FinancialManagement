@@ -1,4 +1,4 @@
-package com.chslcompany.financialmanagement.ui
+package com.chslcompany.financialmanagement.ui.activity
 
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -11,24 +11,12 @@ import kotlinx.android.synthetic.main.resumo_card.view.*
 class SummaryView(val view : View) {
 
      fun consumption(transacoes: List<Transaction>) {
-//        var totalReceita = BigDecimal.ZERO
-//        var totalDespesa = BigDecimal.ZERO
-//        for (transaction in transacoes) {
-//            if (transaction.type == Type.PROFIT) {
-//                totalReceita = totalReceita.plus(transaction.value)
-//                view.resumo_card_receita.text = totalReceita.formatToBrazilianCurrency()
-//            } else {
-//                totalDespesa = totalDespesa.plus(transaction.value)
-//                view.resumo_card_despesa.text = totalDespesa.formatToBrazilianCurrency()
-//            }
-//        }
-
-        var totalReceita : Double = transacoes
+        val totalReceita : Double = transacoes
             .filter { transaction -> transaction.type == Type.PROFIT }
             .sumByDouble { transaction -> transaction.value.toDouble()  }
          view.resumo_card_receita.text = totalReceita.toBigDecimal().formatToBrazilianCurrency()
 
-        var totalDespesa : Double = transacoes
+        val totalDespesa : Double = transacoes
             .filter { transaction -> transaction.type == Type.EXPENSE }
             .sumByDouble { transaction -> transaction.value.toDouble()  }
          view.resumo_card_despesa.text = totalDespesa.toBigDecimal().formatToBrazilianCurrency()

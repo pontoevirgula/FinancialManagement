@@ -1,4 +1,4 @@
-package com.chslcompany.financialmanagement.util
+package com.chslcompany.financialmanagement.ui.dialog
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter
 import com.chslcompany.financialmanagement.R
 import com.chslcompany.financialmanagement.model.Type
 import com.chslcompany.financialmanagement.model.Transaction
+import com.chslcompany.financialmanagement.util.TransactionDelegate
+import com.chslcompany.financialmanagement.util.convertDateFromStringToCalendar
+import com.chslcompany.financialmanagement.util.convertToBrazilianFormat
 import kotlinx.android.synthetic.main.activity_lista_transacoes.view.*
 import kotlinx.android.synthetic.main.form_transaction.view.*
 import java.math.BigDecimal
@@ -71,7 +74,7 @@ class AddTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
             BigDecimal(consumptionValue)
         } catch (e: NumberFormatException) {
             val snackbar = Snackbar.make(
-                createdView.cl_transaction,
+                createdView.clTransaction,
                 "Falha ao inserir valor",
                 Snackbar.LENGTH_SHORT
             )
