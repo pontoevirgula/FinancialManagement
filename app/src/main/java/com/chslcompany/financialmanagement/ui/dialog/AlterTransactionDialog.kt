@@ -33,6 +33,7 @@ class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
 
     }
 
+
     //TODO --REFATORAR CRIANDO UMA CUSTOMDIALOG TENDO COMO REFERENCIA O MATERIALDIALOG
     private fun setupForm(type: Type, transactionDelegate: TransactionDelegate) {
 
