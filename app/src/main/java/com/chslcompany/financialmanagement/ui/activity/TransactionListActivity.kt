@@ -28,9 +28,14 @@ class TransactionListActivity : AppCompatActivity()
         setContentView(R.layout.activity_lista_transacoes)
 
 
+        setupFab()
+
+    }
+
+    private fun setupFab() {
         list_transaction_add_profit.setOnClickListener {
-            AddTransactionDialog(window.decorView as ViewGroup,this)
-                .setupDialog(Type.PROFIT,object : TransactionDelegate {
+            AddTransactionDialog(window.decorView as ViewGroup, this)
+                .setupDialog(Type.PROFIT, object : TransactionDelegate {
                     override fun delegate(transaction: Transaction) {
                         updateTransaction(transaction)
                         lista_transacoes_adiciona_menu.close(true)
@@ -39,15 +44,14 @@ class TransactionListActivity : AppCompatActivity()
         }
 
         list_transaction_add_expense.setOnClickListener {
-            AddTransactionDialog(window.decorView as ViewGroup,this)
-                .setupDialog(Type.EXPENSE,object : TransactionDelegate {
+            AddTransactionDialog(window.decorView as ViewGroup, this)
+                .setupDialog(Type.EXPENSE, object : TransactionDelegate {
                     override fun delegate(transaction: Transaction) {
                         updateTransaction(transaction)
                         lista_transacoes_adiciona_menu.close(true)
                     }
                 })
         }
-
     }
 
 
