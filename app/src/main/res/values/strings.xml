@@ -4,7 +4,9 @@
 
     <string name="lista_transacoes_adiciona" />
     <string name="add_profit">Adiciona receita</string>
+    <string name="edit_profit">Editar receita</string>
     <string name="add_expense">Adiciona despesa</string>
+    <string name="edit_expense">Editar despesa</string>
     <string name="value">Valor</string>
     <string name="date">Data</string>
     <string name="category">Categoria</string>

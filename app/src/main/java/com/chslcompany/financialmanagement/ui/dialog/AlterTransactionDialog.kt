@@ -21,36 +21,46 @@ import java.util.*
 
 class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
 
-    private val createdView = createLayout()
+    private val editedView = createLayout()
+    val fieldValue = editedView.et_transaction_value
+    val fieldDate = editedView.et_transaction_date
+    val fieldCategory = editedView.spn_transaction_category
 
-    fun setupDialog(type : Type,transactionDelegate: TransactionDelegate){
+
+    fun initDialog(transaction : Transaction,transactionDelegate: TransactionDelegate){
+
+        val type = transaction.type
 
         setupFieldDate()
         setupFieldCategory(type)
+        editForm(type,transactionDelegate)
 
-        //CRIAÇÃO DO DIALOG
-        setupForm(type,transactionDelegate)
+        fieldValue.setText(transaction.value.toString())
+        fieldDate.setText(transaction.date.convertToBrazilianFormat())
+        val categoryReturned = context.resources.getStringArray(categoryBy(type))
+        val categoryPosition = categoryReturned.indexOf(transaction.category)
+        fieldCategory.setSelection(categoryPosition,true)
 
     }
 
 
     //TODO --REFATORAR CRIANDO UMA CUSTOMDIALOG TENDO COMO REFERENCIA O MATERIALDIALOG
-    private fun setupForm(type: Type, transactionDelegate: TransactionDelegate) {
+    private fun editForm( type: Type, transactionDelegate: TransactionDelegate) {
 
-        val title = if(type == Type.PROFIT) R.string.add_profit
-                    else  R.string.add_expense
+        val title = if(type == Type.PROFIT) R.string.edit_profit
+                    else  R.string.edit_expense
 
         AlertDialog.Builder(context)
             .setTitle(title)
-            .setView(createdView)
-            .setPositiveButton("Adicionar") { _, _ ->
-                val consumptionValue = createdView.et_transaction_value.text.toString()
+            .setView(editedView)
+            .setPositiveButton("Salvar edições") { _, _ ->
+                val consumptionValue = editedView.et_transaction_value.text.toString()
                 val value = convertStringToBigDecimal(consumptionValue)
 
-                val consumptionDate = createdView.et_transaction_date.text.toString()
+                val consumptionDate = editedView.et_transaction_date.text.toString()
                 val date = consumptionDate.convertDateFromStringToCalendar()
 
-                val consumptionCategory = createdView.spn_transaction_category.selectedItem.toString()
+                val consumptionCategory = editedView.spn_transaction_category.selectedItem.toString()
 
 
                 val transactionCreated = Transaction(
@@ -75,7 +85,7 @@ class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
             BigDecimal(consumptionValue)
         } catch (e: NumberFormatException) {
             val snackbar = Snackbar.make(
-                createdView.clTransaction,
+                editedView.clTransaction,
                 "Falha ao inserir valor",
                 Snackbar.LENGTH_SHORT
             )
@@ -88,8 +98,7 @@ class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
 
     private fun setupFieldCategory(type: Type) {
 
-        val categories = if(type == Type.PROFIT) R.array.categorias_de_receita
-                         else  R.array.categorias_de_despesa
+        val categories = categoryBy(type)
 
         val adapter = ArrayAdapter.
                         createFromResource(
@@ -97,8 +106,15 @@ class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
                             categories,
                             android.R.layout.simple_spinner_dropdown_item)
 
-        createdView.spn_transaction_category.adapter = adapter
+        editedView.spn_transaction_category.adapter = adapter
 
+    }
+
+    private fun categoryBy(type: Type): Int {
+        val categories = if (type == Type.PROFIT) R.array.categorias_de_receita
+                         else R.array.categorias_de_despesa
+
+        return categories
     }
 
     private fun createLayout() : View {
@@ -120,13 +136,14 @@ class AlterTransactionDialog(val viewGroup: ViewGroup, val context: Context) {
         val day = today.get(Calendar.DAY_OF_MONTH)
 
 
-        createdView.et_transaction_date.setText(today.convertToBrazilianFormat())
-        createdView.et_transaction_date.setOnClickListener {
+        editedView.et_transaction_date.setText(today.convertToBrazilianFormat())
+
+        editedView.et_transaction_date.setOnClickListener {
             DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, ano, mes, dia ->
 
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(ano, mes, dia)
-                createdView.et_transaction_date
+                editedView.et_transaction_date
                     .setText(selectedDate.convertToBrazilianFormat())
             }
                 , year,month,day)
