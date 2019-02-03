@@ -13,20 +13,17 @@ import com.chslcompany.financialmanagement.ui.dialog.AlterTransactionDialog
 import com.chslcompany.financialmanagement.util.TransactionDelegate
 import kotlinx.android.synthetic.main.activity_lista_transacoes.*
 
-class TransactionListActivity : AppCompatActivity()
-{
+class TransactionListActivity : AppCompatActivity() {
 
-
-    lateinit var view : View
-
+    private var activityView: View? = null
     val transactions: MutableList<Transaction> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_transacoes)
 
+        activityView = window.decorView
         setupFab()
-
     }
 
     private fun setupFab() {
@@ -39,8 +36,8 @@ class TransactionListActivity : AppCompatActivity()
         }
     }
 
-    private fun callDialogAddTransaction(type: Type){
-        AddTransactionDialog(window.decorView as ViewGroup, this)
+    private fun callDialogAddTransaction(type: Type) {
+        AddTransactionDialog(activityView as ViewGroup, this)
             .setupDialog(type, object : TransactionDelegate {
                 override fun delegate(transaction: Transaction) {
                     transactions.add(transaction)
@@ -56,26 +53,28 @@ class TransactionListActivity : AppCompatActivity()
         setupList()
     }
 
-    private fun setupSummary() {
-        view = window.decorView
-        SummaryView(view).consumption(transactions)
-    }
+    private fun setupSummary() = SummaryView(activityView).consumption(transactions)
 
 
     private fun setupList() {
-        lvTransactions.adapter = TransactionListAdapter(transactions, this)
-        lvTransactions.setOnItemClickListener { parent, view, position, id ->
-            val transactionClicked = transactions[position]
-            AlterTransactionDialog(window.decorView as ViewGroup, this)
-                .initDialog(transactionClicked, object : TransactionDelegate {
-                    override fun delegate(transaction: Transaction) {
-                        transactions.set(position,transaction)
-                        updateTransactionList()
-                    }
-                })
+        with(lvTransactions) {
+            adapter = TransactionListAdapter(transactions, this@TransactionListActivity)
+            setOnItemClickListener { _, _, position, _ ->
+                val transactionClicked = transactions[position]
+                callAlterDialog(transactionClicked, position)
+            }
         }
     }
 
+    private fun callAlterDialog(transactionClicked: Transaction, position: Int) {
+        AlterTransactionDialog(activityView as ViewGroup, this)
+            .initDialog(transactionClicked, object : TransactionDelegate {
+                override fun delegate(transaction: Transaction) {
+                    transactions.set(position, transaction)
+                    updateTransactionList()
+                }
+            })
+    }
 
 
 }
