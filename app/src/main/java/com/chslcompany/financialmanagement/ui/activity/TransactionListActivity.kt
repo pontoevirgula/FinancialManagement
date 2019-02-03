@@ -38,7 +38,7 @@ class TransactionListActivity : AppCompatActivity() {
 
     private fun callDialogAddTransaction(type: Type) {
         AddTransactionDialog(activityView as ViewGroup, this)
-            .setupDialog(type, object : TransactionDelegate {
+            .initDialog(type, object : TransactionDelegate {
                 override fun delegate(transaction: Transaction) {
                     transactions.add(transaction)
                     updateTransactionList()
