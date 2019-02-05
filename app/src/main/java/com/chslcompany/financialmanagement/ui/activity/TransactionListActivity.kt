@@ -2,8 +2,11 @@ package com.chslcompany.financialmanagement.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.AdapterView
 import com.chslcompany.financialmanagement.R
 import com.chslcompany.financialmanagement.model.Transaction
 import com.chslcompany.financialmanagement.model.Type
@@ -67,7 +70,21 @@ class TransactionListActivity : AppCompatActivity() {
                 val transactionClicked = transactions[position]
                 callAlterDialog(transactionClicked, position)
             }
+            setOnCreateContextMenuListener { menu, v, menuInfo ->
+                menu.add(Menu.NONE,1,Menu.NONE,"Remover")
+            }
         }
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        val id = item?.itemId
+        if (id == 1){
+            val adapterMenuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
+            val positionMenu = adapterMenuInfo.position
+            transactions.removeAt(positionMenu)
+            updateTransactionList()
+        }
+        return super.onContextItemSelected(item)
     }
 
     private fun callAlterDialog(transactionClicked: Transaction, position: Int) {
