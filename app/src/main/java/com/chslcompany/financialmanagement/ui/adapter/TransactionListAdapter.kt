@@ -14,62 +14,62 @@ import com.chslcompany.financialmanagement.util.convertToBrazilianFormat
 import com.chslcompany.financialmanagement.util.limitUntil
 import kotlinx.android.synthetic.main.item_transaction.view.*
 
-class TransactionListAdapter(private val transacoes: List<Transaction>,
+class TransactionListAdapter(private val transactions: List<Transaction>,
                              private val context: Context
 ) : BaseAdapter() {
 
-    private val limiteDaCategoria = 14
+    private val categoryLimit = 14
 
-    override fun getItem(posicao: Int) = transacoes[posicao]
+    override fun getItem(posicao: Int) = transactions[posicao]
     override fun getItemId(p0: Int) = 0.toLong()
-    override fun getCount() = transacoes.size
+    override fun getCount() = transactions.size
 
     override fun getView(posicao: Int, view: View?, parent: ViewGroup?): View {
         val viewCriada = LayoutInflater.from(context)
             .inflate(R.layout.item_transaction, parent, false)
 
-        val transacao = getItem(posicao)
+        val transaction = getItem(posicao)
 
-        adicionaValor(transacao, viewCriada)
-        adicionaIcone(transacao, viewCriada)
-        adicionaCategoria(viewCriada, transacao)
-        adicionaData(viewCriada, transacao)
+        addValue(transaction, viewCriada)
+        addIcon(transaction, viewCriada)
+        addCategory(viewCriada, transaction)
+        addDate(viewCriada, transaction)
 
         return viewCriada
     }
 
-    private fun adicionaData(viewCriada: View, transacao: Transaction) {
-        viewCriada.transacao_data.text = transacao.date
+    private fun addDate(viewCriada: View, transaction: Transaction) {
+        viewCriada.transacao_data.text = transaction.date
             .convertToBrazilianFormat()
     }
 
-    private fun adicionaCategoria(viewCriada: View, transacao: Transaction) {
-        viewCriada.transacao_categoria.text = transacao.category
-            .limitUntil(limiteDaCategoria)
+    private fun addCategory(viewCriada: View, transaction: Transaction) {
+        viewCriada.transacao_categoria.text = transaction.category
+            .limitUntil(categoryLimit)
     }
 
-    private fun adicionaIcone(transacao: Transaction, viewCriada: View) {
-        val icone = iconePor(transacao.type)
+    private fun addIcon(transaction: Transaction, viewCriada: View) {
+        val icon = iconBy(transaction.type)
         viewCriada.transacao_icone
-            .setBackgroundResource(icone)
+            .setBackgroundResource(icon)
     }
 
-    private fun iconePor(type: Type): Int {
+    private fun iconBy(type: Type): Int {
         if (type == Type.PROFIT) {
             return R.drawable.icone_transacao_item_receita
         }
         return R.drawable.icone_transacao_item_despesa
     }
 
-    private fun adicionaValor(transacao: Transaction, viewCriada: View) {
-        val cor: Int = corPor(transacao.type)
+    private fun addValue(transaction: Transaction, viewCriada: View) {
+        val color: Int = colorBy(transaction.type)
         viewCriada.transacao_valor
-            .setTextColor(cor)
-        viewCriada.transacao_valor.text = transacao.value
+            .setTextColor(color)
+        viewCriada.transacao_valor.text = transaction.value
             .formatToBrazilianCurrency()
     }
 
-    private fun corPor(type: Type): Int {
+    private fun colorBy(type: Type): Int {
         if (type == Type.PROFIT) {
             return ContextCompat.getColor(context, R.color.receita)
         }

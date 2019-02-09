@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.AdapterView
 import com.chslcompany.financialmanagement.R
+import com.chslcompany.financialmanagement.dao.TransactionDAO
 import com.chslcompany.financialmanagement.model.Transaction
 import com.chslcompany.financialmanagement.model.Type
 import com.chslcompany.financialmanagement.ui.adapter.TransactionListAdapter
@@ -18,18 +18,23 @@ import kotlinx.android.synthetic.main.activity_lista_transacoes.*
 
 class TransactionListActivity : AppCompatActivity() {
 
+    private val dao = TransactionDAO()
+    private val transactions = dao.transactions
+
     private val activityView by lazy {
         window.decorView
     }
     private val viewGroupActivity by lazy {
         activityView as ViewGroup
     }
-    val transactions: MutableList<Transaction> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_transacoes)
 
+
+        setupSummary()
+        setupList()
         setupFab()
     }
 
@@ -47,7 +52,7 @@ class TransactionListActivity : AppCompatActivity() {
         AddTransactionDialog(viewGroupActivity, this)
             .initDialog(type, object : TransactionDelegate {
                 override fun delegate(transaction: Transaction) {
-                    transactions.add(transaction)
+                    dao.add(transaction)
                     updateTransactionList()
                     lvTransactionsAddMenu.close(true)
                 }
@@ -71,17 +76,17 @@ class TransactionListActivity : AppCompatActivity() {
                 callAlterDialog(transactionClicked, position)
             }
             setOnCreateContextMenuListener { menu, v, menuInfo ->
-                menu.add(Menu.NONE,1,Menu.NONE,"Remover")
+                menu.add(Menu.NONE, 1, Menu.NONE, "Remover")
             }
         }
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val id = item?.itemId
-        if (id == 1){
+        if (id == 1) {
             val adapterMenuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val positionMenu = adapterMenuInfo.position
-            transactions.removeAt(positionMenu)
+            dao.remove(positionMenu)
             updateTransactionList()
         }
         return super.onContextItemSelected(item)
@@ -91,7 +96,7 @@ class TransactionListActivity : AppCompatActivity() {
         AlterTransactionDialog(viewGroupActivity, this)
             .initDialog(transactionClicked, object : TransactionDelegate {
                 override fun delegate(transaction: Transaction) {
-                    transactions.set(position, transaction)
+                    dao.alter(transaction, position)
                     updateTransactionList()
                 }
             })

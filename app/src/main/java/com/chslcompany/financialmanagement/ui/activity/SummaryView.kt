@@ -10,20 +10,20 @@ import kotlinx.android.synthetic.main.resumo_card.view.*
 
 class SummaryView(val view : View) {
 
-     fun consumption(transacoes: List<Transaction>) {
+     fun consumption(transactions: List<Transaction>) {
 
-         val totalReceita : Double = transacoes
+         val totalProfit : Double = transactions
                 .filter { transaction -> transaction.type == Type.PROFIT }
                 .sumByDouble { transaction -> transaction.value.toDouble()  }
-         view.resumo_card_receita.text = totalReceita.toBigDecimal().formatToBrazilianCurrency()
+         view.resumo_card_receita.text = totalProfit.toBigDecimal().formatToBrazilianCurrency()
 
-         val totalDespesa : Double = transacoes
+         val totalExpense : Double = transactions
                 .filter { transaction -> transaction.type == Type.EXPENSE }
                 .sumByDouble { transaction -> transaction.value.toDouble()  }
-         view.resumo_card_despesa.text = totalDespesa.toBigDecimal().formatToBrazilianCurrency()
+         view.resumo_card_despesa.text = totalExpense.toBigDecimal().formatToBrazilianCurrency()
 
-         view.resumo_card_total.text = totalReceita.minus(totalDespesa).toBigDecimal().formatToBrazilianCurrency()
-         val colorFieldTotal = totalReceita.minus(totalDespesa).toFloat()
+         view.resumo_card_total.text = totalProfit.minus(totalExpense).toBigDecimal().formatToBrazilianCurrency()
+         val colorFieldTotal = totalProfit.minus(totalExpense).toFloat()
          when {
              colorFieldTotal > 0.0 -> view.resumo_card_total.setTextColor(ContextCompat.getColor(view.context, R.color.receita))
              colorFieldTotal < 0.0 -> view.resumo_card_total.setTextColor(ContextCompat.getColor(view.context, R.color.despesa))
