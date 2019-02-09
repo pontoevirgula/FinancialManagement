@@ -26,6 +26,7 @@ abstract class BaseDialog(private val viewGroup: ViewGroup, private val context:
     protected val fieldDate = view.et_transaction_date
     protected val fieldCategory = view.spn_transaction_category
     protected abstract val buttonPositiveName : String
+    private lateinit var value : BigDecimal
 
 
     fun initDialog(type : Type, transactionDelegate: TransactionDelegate){
@@ -40,18 +41,22 @@ abstract class BaseDialog(private val viewGroup: ViewGroup, private val context:
         val title = titleBy(type)
 
 
-        AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context)
             .setTitle(title)
             .setView(view)
-            .setPositiveButton(buttonPositiveName) { _, _ ->
+            .setPositiveButton(buttonPositiveName,null)
+            .setNegativeButton("Cancelar", null)
+            .show()
+        val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        btnPositive.setOnClickListener {
+            if (view.et_transaction_value.text.toString() != "") {
                 val consumptionValue = view.et_transaction_value.text.toString()
-                val value = convertStringToBigDecimal(consumptionValue)
+                value = convertStringToBigDecimal(consumptionValue)
 
                 val consumptionDate = view.et_transaction_date.text.toString()
                 val date = consumptionDate.convertDateFromStringToCalendar()
 
                 val consumptionCategory = view.spn_transaction_category.selectedItem.toString()
-
 
                 val transactionCreated = Transaction(
                     value = value,
@@ -59,13 +64,14 @@ abstract class BaseDialog(private val viewGroup: ViewGroup, private val context:
                     date = date,
                     category = consumptionCategory
                 )
-
                 transactionDelegate.delegate(transactionCreated)
+                dialog.dismiss()
 
-
+            }else{
+                view.et_transaction_value.error = "Campo obrigatório"
             }
-            .setNegativeButton("Cancelar", null)
-            .show()
+
+        }
     }
 
     protected abstract fun titleBy(type: Type): Int
